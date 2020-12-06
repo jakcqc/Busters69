@@ -9,9 +9,9 @@
 ## Team Members
 * Chase White
 * Jeremy Breese
-*Jeffrey kerley
-*Zach Snyder
-*Ethan Schutzenhofer
+* Jeffrey kerley
+* Zach Snyder
+* Ethan Schutzenhofer
 
 ## Requirements to Run our Interpreter
 
