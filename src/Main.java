@@ -22,18 +22,19 @@ class Main {
             System.out.println("Could not open file");
         }
 
-        // loop through entire array, remove comments
-        // ? convert to array list
         linesFromFile = in.split("\n");
         numberOfLines = linesFromFile.length;
         //i = 0;
 
+        System.out.println("FLAG: " + linesFromFile[12]);
         for(i = 0; i<linesFromFile.length; i++){
-            System.out.println("Running line: "+(i+1));
-            executeLine(linesFromFile[i]);
-            System.out.println("\n");
-            //i++;
-            //x=i;
+            if(!(linesFromFile[i].isEmpty())){
+                if ((linesFromFile[i].charAt(0) != '#')){
+                    System.out.println("Running line: "+(i+1));
+                    executeLine(linesFromFile[i]);
+                    System.out.println("\n");
+                }
+            }
         }
         System.out.println(variables);
 
