@@ -7,8 +7,8 @@
 ### We created seperate functions to handle different parts of an interpretering such as if/else has their own function
 
 ## Team Members
-*Chase White
-*Jeremy Breese
+* Chase White
+* Jeremy Breese
 *Jeffrey kerley
 *Zach Snyder
 *Ethan Schutzenhofer
