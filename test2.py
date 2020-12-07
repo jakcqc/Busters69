@@ -11,5 +11,6 @@ charmender_attack = 40
 squirtle_attack = 35
 bulbasaur_attack = 25
 turn = 1
-if (charmender_HP >= 1):
+if charmender_HP >= 1:
     print("'s Charmender won!")
+print(name+"'s Charmender won!")

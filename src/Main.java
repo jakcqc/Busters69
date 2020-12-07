@@ -85,7 +85,7 @@ public static boolean checkIfExists(String variableName){
 
 public static boolean assignmentOperator(String line){
     line = line.replaceAll("\\s","");
-    line = line.replaceAll("[()]","");
+    line = line.replaceAll("[()]","");    
     String variableName = line.split("=")[0];
     String variableValue = line.split("=")[1];
     boolean toggle = false;
@@ -216,7 +216,11 @@ public static void ifelse(String line){
         }
     }
     else{
-        condition = line.split("[\\(\\)]")[1];
+        if (line.contains("if(") || line.contains("if (")){
+            condition = line.split("[\\(\\)]")[1];
+        }
+        condition = line.substring(3, line.length()-1);
+        //condition = line.split("[\\ \\]")[1];
         result = evaluateTrueFalse(condition);
         if(!result){
             evalResult = false;
@@ -294,7 +298,18 @@ public static void ifelse(String line){
 
 public static void printOut(String line){
     String statement = line.split("[\\(\\)]")[1];
-    System.out.println(statement);
+    String statements[] = statement.split("\\+");
+    for(int x = 0; x < statements.length; x++){
+        if (statements[x].charAt(0) == '"'){
+            statements[x] = statements[x].substring(1, statements[x].length()-1);
+            System.out.print(statements[x]);
+        }
+        else{
+            statements[x] = variables.get(statements[x]);
+            System.out.print(statements[x].replaceAll("\"", ""));
+        }
+    }
+    System.out.println();
     
 }
 
@@ -447,3 +462,22 @@ public static boolean evaluateTrueFalse(String line){
     return false;
 }
 }
+
+/*
+if charmender_HP >= 1:    
+    print(name+"'s Charmender won!")
+elif squirtle_HP >=1:
+    print(name+"'s Squirtle won!")
+else:
+    print("Something went wrong!!!")
+
+if charmender_HP >= 1:    
+    print(name+"'s Charmender won!")
+else:
+    if squirtle_HP >=1:
+        print(name+"'s Squirtle won!")
+else:
+    print("Something went wrong!!!")
+
+
+*/
