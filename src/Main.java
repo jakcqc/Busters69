@@ -3,7 +3,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.util.HashMap;
-
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 
 class Main {
@@ -12,7 +14,7 @@ class Main {
     public static int i;
     public static String[] linesFromFile;
     public static HashMap<String, String> variables = new HashMap<>();
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ScriptException {
         initializeKeywords();
         
         String in = "";
@@ -61,8 +63,16 @@ public static void executeLine(String line){
     }
 
     if ((lineDone == false) && (line.contains("-=") || line.contains("*=") || line.contains("/=") || line.contains("^=") || line.contains("%=") || line.contains("=") || line.contains("+="))){
-    System.out.println(assignmentOperator(line));
+        System.out.println(assignmentOperator(line));
+        lineDone = true;
     }
+
+    if ((lineDone == false) && (line.contains("-") || line.contains("*") || line.contains("/") || line.contains("^") || line.contains("%") || line.contains("=") || line.contains("="))){
+        evaluateArithmatic(line);
+        lineDone = true;
+    } 
+
+    
     //makeNewVariable(line);
 }
 
@@ -76,7 +86,13 @@ public static void makeNewVariable(String line){
 }
 
 public static void updateVariable(String line){
-    makeNewVariable(line);
+    if ((line.contains("-") || line.contains("*") || line.contains("/") || line.contains("^") || line.contains("%") || line.contains("+"))){
+        evaluateArithmatic(line);
+    } 
+    else {
+        makeNewVariable(line);
+    }
+    
 }
 
 public static boolean checkIfExists(String variableName){
@@ -221,15 +237,18 @@ public static void ifelse(String line){
     else{
         if (line.contains("if(") || line.contains("if (")){
             condition = line.split("[\\(\\)]")[1];
+
         }
-        condition = line.substring(3, line.length()-1);
+        else
+            condition = line.substring(3, line.length()-1);
+        System.out.println("HERE: "+condition);
         //condition = line.split("[\\ \\]")[1];
         result = evaluateTrueFalse(condition);
         if(!result){
             evalResult = false;
         }
     }
-
+    System.out.println("HERE : "+condition);
     i++;
     if(evalResult){
         line = linesFromFile[i];
@@ -549,23 +568,21 @@ public static boolean evaluateTrueFalse(String line){
     }
     return false;
 }
+
+public static void evaluateArithmatic(String line){
+    line = line.replaceAll("\\s","");
+    String variable = line.split("=")[0];
+    String expression = line.split("=")[1];
+    Object result = 0;
+
+    ScriptEngineManager manager = new ScriptEngineManager();
+    ScriptEngine engine = manager.getEngineByName("js");        
+    try {
+        result = engine.eval(expression);
+    } catch (ScriptException e) {
+        System.out.println(e);
+    }
+    variables.put(variable, result.toString());
 }
 
-/*
-if charmender_HP >= 1:    
-    print(name+"'s Charmender won!")
-elif squirtle_HP >=1:
-    print(name+"'s Squirtle won!")
-else:
-    print("Something went wrong!!!")
-
-if charmender_HP >= 1:    
-    print(name+"'s Charmender won!")
-else:
-    if squirtle_HP >=1:
-        print(name+"'s Squirtle won!")
-else:
-    print("Something went wrong!!!")
-
-
-*/
+}

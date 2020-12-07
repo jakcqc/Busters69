@@ -11,7 +11,7 @@ charmender_attack = 40
 squirtle_attack = 35
 bulbasaur_attack = 25
 turn = 1
-if charmender_HP >= 1:
+if charmender_HP != 1:
     print("FLAGGGGGGGGGG Charmender won!")
     print("SECOND LINE")
 print(name+"'s Charmender won!HIIII")
@@ -24,3 +24,12 @@ else:
     print("Something went wrong!!!")
 print("END")
 bulbasaur_HP -= squirtle_attack  
+ 
+x = 1 + 2 + 3 
+eq1 = 2 * -5 + 20
+eq1 = 2 * -5 + 20
+print("EQ1: "+(eq1))  
+# Trim parenthesis off of (eq1)
+if (eq1 != 0):    
+    print("eq1 output not equal to 0")
+eq2 = -2 * 3 / 12
