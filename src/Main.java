@@ -230,7 +230,10 @@ public static void ifelse(String line){
             executeLine(line);
             i++;
             j++;
-            line = linesFromFile[i];
+            if(i < numberOfLines)
+                line = linesFromFile[i];
+            else
+                break;
         }
         if(j == 0){
             // Syntax Error
@@ -342,24 +345,7 @@ public static boolean evaluateTrueFalse(String line){
     line = line.replaceAll("\\s","");
     String[] variablesInput;
     double first, second;
-    if (line.contains("<")){
-        variablesInput = line.split("<");
-        
-        if (Character.isDigit(variablesInput[0].charAt(0))){
-            first = Double.parseDouble(variablesInput[0]);
-        }
-        else{
-            first = Double.parseDouble(variables.get(variablesInput[0]));
-        }
-        if (Character.isDigit(variablesInput[1].charAt(0))){
-            second = Double.parseDouble(variablesInput[1]);
-        }
-        else{
-            second = Double.parseDouble(variables.get(variablesInput[1]));
-        }
-
-        return first<second;
-    }
+    
     if (line.contains("<=")){
         variablesInput = line.split("<=");
         if (Character.isDigit(variablesInput[0].charAt(0))){
@@ -375,6 +361,22 @@ public static boolean evaluateTrueFalse(String line){
             second = Double.parseDouble(variables.get(variablesInput[1]));
         }
         return first<=second;
+    }
+    if (line.contains(">=")){
+        variablesInput = line.split(">=");
+        if (Character.isDigit(variablesInput[0].charAt(0))){
+            first = Double.parseDouble(variablesInput[0]);
+        }
+        else{
+            first = Double.parseDouble(variables.get(variablesInput[0]));
+        }
+        if (Character.isDigit(variablesInput[1].charAt(0))){
+            second = Double.parseDouble(variablesInput[1]);
+        }
+        else{
+            second = Double.parseDouble(variables.get(variablesInput[1]));
+        }
+        return first>=second;
     }
     if (line.contains(">")){
         variablesInput = line.split(">");
@@ -392,8 +394,9 @@ public static boolean evaluateTrueFalse(String line){
         }
         return first>second;
     }
-    if (line.contains(">=")){
-        variablesInput = line.split(">=");
+    if (line.contains("<")){
+        variablesInput = line.split("<");
+        
         if (Character.isDigit(variablesInput[0].charAt(0))){
             first = Double.parseDouble(variablesInput[0]);
         }
@@ -406,7 +409,8 @@ public static boolean evaluateTrueFalse(String line){
         else{
             second = Double.parseDouble(variables.get(variablesInput[1]));
         }
-        return first>=second;
+
+        return first<second;
     }
     if (line.contains("==")){
         variablesInput = line.split("==");

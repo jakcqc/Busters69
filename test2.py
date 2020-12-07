@@ -1,23 +1,15 @@
-if(1<2):
-    print("hi")
-if(2<1):
-    print("BAD")
-x="Zach"
-x+="Jeremy"
-x="riley"
-y=3
-y+=2
-y-=1
-y*=2
-# Test
-y/=4
-y^=2
-y%=2
-print(x)
-x=3
-if(x<5):
-    print("HELLO")
-x=6
-if(5<x):
-    print("BYE")
-print("Test")
+# Pokemon master name
+name = "Ash Ketchum"
+
+# Pokemon Health Points
+charmender_HP = 110
+squirtle_HP = 125
+bulbasaur_HP = 150
+
+# Pokemon Attack Points
+charmender_attack = 40
+squirtle_attack = 35
+bulbasaur_attack = 25
+turn = 1
+if (charmender_HP >= 1):
+    print("'s Charmender won!")
