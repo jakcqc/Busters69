@@ -1,0 +1,23 @@
+if(1<2):
+    print("hi")
+if(2<1):
+    print("BAD")
+x="Zach"
+x+="Jeremy"
+x="riley"
+y=3
+y+=2
+y-=1
+y*=2
+# Test
+y/=4
+y^=2
+y%=2
+print(x)
+x=3
+if(x<5):
+    print("HELLO")
+x=6
+if(5<x):
+    print("BYE")
+print("Test")
