@@ -245,8 +245,21 @@ public static void ifelse(String line){
             System.exit(0);
         }
         if(j > 0){
-            //i++;
-            //line = linesFromFile[i];
+            if(line.contains("elif")){
+                i++;
+                line = linesFromFile[i];
+                j = 0;
+                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                    i++;
+                    j++;
+                    line = linesFromFile[i];
+                }
+                if(j == 0){
+                    // Syntax Error
+                    System.out.println("Syntax Error 277");
+                    
+                }
+            }
             if(line.contains("else:")){
                 i++;
                 line = linesFromFile[i];
@@ -275,6 +288,78 @@ public static void ifelse(String line){
         if(j == 0){
             // Syntax Error
             System.out.println("Syntax Error 264");
+        }
+        if(line.contains("elif")){
+            if (line.contains("elif(") || line.contains("elif (")){
+                condition = line.split("[\\(\\)]")[1];
+            }
+            condition = line.substring(5, line.length()-1);
+            result = evaluateTrueFalse(condition);
+            i++;
+            if(result){
+                line = linesFromFile[i];
+                j = 0;
+                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                    executeLine(line);
+                    i++;
+                    j++;
+                    line = linesFromFile[i];
+                }
+                if(j == 0){
+                    // Syntax Error
+                    System.out.println("Syntax Error 313");
+                    System.exit(0);
+                }
+                if(j > 0){
+                    //i++;
+                    //line = linesFromFile[i];
+                    if(line.contains("else:")){
+                        i++;
+                        line = linesFromFile[i];
+                        j = 0;
+                        while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                            i++;
+                            j++;
+                            line = linesFromFile[i];
+                        }
+                        if(j == 0){
+                            // Syntax Error
+                            System.out.println("Syntax Error 330");
+                            
+                        }
+                    }
+                }
+            }
+            else{
+                line = linesFromFile[i];
+                j = 0;
+                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                    i++;
+                    j++;
+                    line = linesFromFile[i];
+                }
+                if(j == 0){
+                    // Syntax Error
+                    System.out.println("Syntax Error 347");
+                    
+                }
+                if(line.contains("else:")){
+                    i++;
+                    line = linesFromFile[i];
+                    j = 0;
+                    while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                        executeLine(line);
+                        i++;
+                        j++;
+                        line = linesFromFile[i];
+                    }
+                    if(j == 0){
+                        // Syntax Error
+                        System.out.println("Syntax Error 361");
+                        System.exit(0);
+                    }
+                }
+            }
         }
         if(line.contains("else:")){
             i++;
