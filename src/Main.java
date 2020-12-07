@@ -105,6 +105,9 @@ public static boolean assignmentOperator(String line){
 
     }
     else{
+        if (!(Character.isDigit(variableValue.charAt(0)))){
+            variableValue = (variables.get(variableValue));
+        }
         if (line.contains("+=")){
             intPlusEquals(variableName.substring(0, variableName.length()-1), variableValue);
             return true;

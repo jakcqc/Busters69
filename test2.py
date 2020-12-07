@@ -23,3 +23,4 @@ elif squirtle_HP >=1:
 else:
     print("Something went wrong!!!")
 print("END")
+bulbasaur_HP -= squirtle_attack  
