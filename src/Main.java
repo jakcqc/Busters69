@@ -3,7 +3,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.util.HashMap;
-
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 
 class Main {
@@ -12,7 +14,7 @@ class Main {
     public static int i;
     public static String[] linesFromFile;
     public static HashMap<String, String> variables = new HashMap<>();
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ScriptException {
         initializeKeywords();
         
         String in = "";
@@ -61,8 +63,16 @@ public static void executeLine(String line){
     }
 
     if ((lineDone == false) && (line.contains("-=") || line.contains("*=") || line.contains("/=") || line.contains("^=") || line.contains("%=") || line.contains("=") || line.contains("+="))){
-    System.out.println(assignmentOperator(line));
+        System.out.println(assignmentOperator(line));
+        lineDone = true;
     }
+
+    if ((lineDone == false) && (line.contains("-") || line.contains("*") || line.contains("/") || line.contains("^") || line.contains("%") || line.contains("=") || line.contains("="))){
+        evaluateArithmatic(line);
+        lineDone = true;
+    } 
+
+    
     //makeNewVariable(line);
 }
 
@@ -76,7 +86,13 @@ public static void makeNewVariable(String line){
 }
 
 public static void updateVariable(String line){
-    makeNewVariable(line);
+    if ((line.contains("-") || line.contains("*") || line.contains("/") || line.contains("^") || line.contains("%") || line.contains("+"))){
+        evaluateArithmatic(line);
+    } 
+    else {
+        makeNewVariable(line);
+    }
+    
 }
 
 public static boolean checkIfExists(String variableName){
@@ -85,7 +101,7 @@ public static boolean checkIfExists(String variableName){
 
 public static boolean assignmentOperator(String line){
     line = line.replaceAll("\\s","");
-    line = line.replaceAll("[()]","");
+    line = line.replaceAll("[()]","");    
     String variableName = line.split("=")[0];
     String variableValue = line.split("=")[1];
     boolean toggle = false;
@@ -105,6 +121,9 @@ public static boolean assignmentOperator(String line){
 
     }
     else{
+        if (!(Character.isDigit(variableValue.charAt(0)))){
+            variableValue = (variables.get(variableValue));
+        }
         if (line.contains("+=")){
             intPlusEquals(variableName.substring(0, variableName.length()-1), variableValue);
             return true;
@@ -216,13 +235,20 @@ public static void ifelse(String line){
         }
     }
     else{
-        condition = line.split("[\\(\\)]")[1];
+        if (line.contains("if(") || line.contains("if (")){
+            condition = line.split("[\\(\\)]")[1];
+
+        }
+        else
+            condition = line.substring(3, line.length()-1);
+        System.out.println("HERE: "+condition);
+        //condition = line.split("[\\ \\]")[1];
         result = evaluateTrueFalse(condition);
         if(!result){
             evalResult = false;
         }
     }
-
+    System.out.println("HERE : "+condition);
     i++;
     if(evalResult){
         line = linesFromFile[i];
@@ -230,7 +256,10 @@ public static void ifelse(String line){
             executeLine(line);
             i++;
             j++;
-            line = linesFromFile[i];
+            if(i < numberOfLines)
+                line = linesFromFile[i];
+            else
+                break;
         }
         if(j == 0){
             // Syntax Error
@@ -238,8 +267,21 @@ public static void ifelse(String line){
             System.exit(0);
         }
         if(j > 0){
-            //i++;
-            //line = linesFromFile[i];
+            if(line.contains("elif")){
+                i++;
+                line = linesFromFile[i];
+                j = 0;
+                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                    i++;
+                    j++;
+                    line = linesFromFile[i];
+                }
+                if(j == 0){
+                    // Syntax Error
+                    System.out.println("Syntax Error 277");
+                    
+                }
+            }
             if(line.contains("else:")){
                 i++;
                 line = linesFromFile[i];
@@ -269,6 +311,78 @@ public static void ifelse(String line){
             // Syntax Error
             System.out.println("Syntax Error 264");
         }
+        if(line.contains("elif")){
+            if (line.contains("elif(") || line.contains("elif (")){
+                condition = line.split("[\\(\\)]")[1];
+            }
+            condition = line.substring(5, line.length()-1);
+            result = evaluateTrueFalse(condition);
+            i++;
+            if(result){
+                line = linesFromFile[i];
+                j = 0;
+                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                    executeLine(line);
+                    i++;
+                    j++;
+                    line = linesFromFile[i];
+                }
+                if(j == 0){
+                    // Syntax Error
+                    System.out.println("Syntax Error 313");
+                    System.exit(0);
+                }
+                if(j > 0){
+                    //i++;
+                    //line = linesFromFile[i];
+                    if(line.contains("else:")){
+                        i++;
+                        line = linesFromFile[i];
+                        j = 0;
+                        while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                            i++;
+                            j++;
+                            line = linesFromFile[i];
+                        }
+                        if(j == 0){
+                            // Syntax Error
+                            System.out.println("Syntax Error 330");
+                            
+                        }
+                    }
+                }
+            }
+            else{
+                line = linesFromFile[i];
+                j = 0;
+                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                    i++;
+                    j++;
+                    line = linesFromFile[i];
+                }
+                if(j == 0){
+                    // Syntax Error
+                    System.out.println("Syntax Error 347");
+                    
+                }
+                if(line.contains("else:")){
+                    i++;
+                    line = linesFromFile[i];
+                    j = 0;
+                    while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                        executeLine(line);
+                        i++;
+                        j++;
+                        line = linesFromFile[i];
+                    }
+                    if(j == 0){
+                        // Syntax Error
+                        System.out.println("Syntax Error 361");
+                        System.exit(0);
+                    }
+                }
+            }
+        }
         if(line.contains("else:")){
             i++;
             line = linesFromFile[i];
@@ -291,7 +405,18 @@ public static void ifelse(String line){
 
 public static void printOut(String line){
     String statement = line.split("[\\(\\)]")[1];
-    System.out.println(statement);
+    String statements[] = statement.split("\\+");
+    for(int x = 0; x < statements.length; x++){
+        if (statements[x].charAt(0) == '"'){
+            statements[x] = statements[x].substring(1, statements[x].length()-1);
+            System.out.print(statements[x]);
+        }
+        else{
+            statements[x] = variables.get(statements[x]);
+            System.out.print(statements[x].replaceAll("\"", ""));
+        }
+    }
+    System.out.println();
     
 }
 
@@ -342,24 +467,7 @@ public static boolean evaluateTrueFalse(String line){
     line = line.replaceAll("\\s","");
     String[] variablesInput;
     double first, second;
-    if (line.contains("<")){
-        variablesInput = line.split("<");
-        
-        if (Character.isDigit(variablesInput[0].charAt(0))){
-            first = Double.parseDouble(variablesInput[0]);
-        }
-        else{
-            first = Double.parseDouble(variables.get(variablesInput[0]));
-        }
-        if (Character.isDigit(variablesInput[1].charAt(0))){
-            second = Double.parseDouble(variablesInput[1]);
-        }
-        else{
-            second = Double.parseDouble(variables.get(variablesInput[1]));
-        }
-
-        return first<second;
-    }
+    
     if (line.contains("<=")){
         variablesInput = line.split("<=");
         if (Character.isDigit(variablesInput[0].charAt(0))){
@@ -375,6 +483,22 @@ public static boolean evaluateTrueFalse(String line){
             second = Double.parseDouble(variables.get(variablesInput[1]));
         }
         return first<=second;
+    }
+    if (line.contains(">=")){
+        variablesInput = line.split(">=");
+        if (Character.isDigit(variablesInput[0].charAt(0))){
+            first = Double.parseDouble(variablesInput[0]);
+        }
+        else{
+            first = Double.parseDouble(variables.get(variablesInput[0]));
+        }
+        if (Character.isDigit(variablesInput[1].charAt(0))){
+            second = Double.parseDouble(variablesInput[1]);
+        }
+        else{
+            second = Double.parseDouble(variables.get(variablesInput[1]));
+        }
+        return first>=second;
     }
     if (line.contains(">")){
         variablesInput = line.split(">");
@@ -392,8 +516,9 @@ public static boolean evaluateTrueFalse(String line){
         }
         return first>second;
     }
-    if (line.contains(">=")){
-        variablesInput = line.split(">=");
+    if (line.contains("<")){
+        variablesInput = line.split("<");
+        
         if (Character.isDigit(variablesInput[0].charAt(0))){
             first = Double.parseDouble(variablesInput[0]);
         }
@@ -406,7 +531,8 @@ public static boolean evaluateTrueFalse(String line){
         else{
             second = Double.parseDouble(variables.get(variablesInput[1]));
         }
-        return first>=second;
+
+        return first<second;
     }
     if (line.contains("==")){
         variablesInput = line.split("==");
@@ -442,4 +568,21 @@ public static boolean evaluateTrueFalse(String line){
     }
     return false;
 }
+
+public static void evaluateArithmatic(String line){
+    line = line.replaceAll("\\s","");
+    String variable = line.split("=")[0];
+    String expression = line.split("=")[1];
+    Object result = 0;
+
+    ScriptEngineManager manager = new ScriptEngineManager();
+    ScriptEngine engine = manager.getEngineByName("js");        
+    try {
+        result = engine.eval(expression);
+    } catch (ScriptException e) {
+        System.out.println(e);
+    }
+    variables.put(variable, result.toString());
+}
+
 }
