@@ -30,9 +30,9 @@ class Main {
         for(i = 0; i<linesFromFile.length; i++){
             if(!(linesFromFile[i].isEmpty())){
                 if ((linesFromFile[i].charAt(0) != '#')){
-                    System.out.println("Running line: "+(i+1));
+                    // System.out.println("Running line: "+(i+1));
                     executeLine(linesFromFile[i]);
-                    System.out.println("\n");
+                    // System.out.println("\n");
                 }
             }
         }
@@ -82,22 +82,26 @@ public static void whileLoop(String line){
     i++;
     line = linesFromFile[i];
     while(line.charAt(0) == ' ' || line.charAt(0) == '\t'){
-        System.out.println(line);
         j++;
         i++;
         line = linesFromFile[i];
-        //System.out.println(line);
     }
     while(whileLoopCondition(linesFromFile[startLineNum])){
         i = startLineNum + 1;
         line = linesFromFile[i];
         while((line.charAt(0) == ' ' || line.charAt(0) == '\t')){
-            //System.out.println(line);
             executeLine(line);
             i++;
             line = linesFromFile[i];
+            if(linesFromFile[i].isEmpty()){
+                break;
+            }
+        }
+        if(linesFromFile[i].isEmpty()){
+            break;
         }
     }
+    
 
     i = startLineNum + j + 1;
     line = linesFromFile[i];
@@ -329,7 +333,6 @@ public static void ifelse(String line){
                     condition = condition.substring(2, condition.length()-1);
                 }
             }
-            System.out.println(condition);
                 result = evaluateTrueFalse(condition);
                 if(!result){
                     evalResult = false;
@@ -341,7 +344,6 @@ public static void ifelse(String line){
         while(line.charAt(ifSpacing) == ' '){
             ifSpacing++;
         }
-        System.out.println("SPACEs" + ifSpacing);
     i++;
     line = linesFromFile[i];
     if(evalResult){
@@ -402,11 +404,6 @@ public static void ifelse(String line){
         }
     }
     else{
-        ifSpacing = 0;
-        while(line.charAt(ifSpacing) == ' '){
-            ifSpacing++;
-        }
-        System.out.println("SPACEs" + ifSpacing);
         j = 0;
         while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             i++;
