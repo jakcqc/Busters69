@@ -36,7 +36,6 @@ class Main {
             }
         }
         System.out.println(variables);
-
     }
 
     public static String[] removeEmptyLines(String [] lines){
@@ -453,8 +452,6 @@ public static void ifelse(String line){
 }
 
 public static void printOut(String line){
-    
-    
     String temp1;
     String temp2;
     String result = "";
@@ -474,8 +471,12 @@ public static void printOut(String line){
         line = temp1 + result;
         
     } 
+    String statement = "";
+    for(int p = 1; p < line.split("[\\(\\)]").length; p++){
+        statement += line.split("[\\(\\)]")[p];
+    }
+    //String statement = line.split("[\\(\\)]")[1];
     
-    String statement = line.split("[\\(\\)]")[1];
     String statements[] = statement.split("\\+");
     for(int x = 0; x < statements.length; x++){
         if (statements[x].charAt(0) == '"'){
