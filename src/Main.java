@@ -80,27 +80,49 @@ public static void whileLoop(String line){
     line = line.replaceAll("[()]",""); 
     int startLineNum = i;
     i++;
-    
     line = linesFromFile[i];
-    ArrayList<String> blockToExecute = new ArrayList<String>();
     while(line.charAt(0) == ' ' || line.charAt(0) == '\t'){
-        blockToExecute.add(line);
-        i++;
+        System.out.println(line);
         j++;
+        i++;
         line = linesFromFile[i];
+        //System.out.println(line);
+    }
+    while(whileLoopCondition(linesFromFile[startLineNum])){
+        i = startLineNum + 1;
+        line = linesFromFile[i];
+        while((line.charAt(0) == ' ' || line.charAt(0) == '\t')){
+            //System.out.println(line);
+            executeLine(line);
+            i++;
+            line = linesFromFile[i];
+        }
     }
 
-    while(whileLoopCondition(linesFromFile[startLineNum])){
-        blockToExecute.forEach((n) -> executeLine(n)); 
-    }
+    i = startLineNum + j + 1;
+    line = linesFromFile[i];
+
+
+    // ArrayList<String> blockToExecute = new ArrayList<String>();
+    // while(line.charAt(0) == ' ' || line.charAt(0) == '\t'){
+    //     blockToExecute.add(line);
+    //     i++;
+    //     j++;
+    //     line = linesFromFile[i];
+    // }
+
+    // while(whileLoopCondition(linesFromFile[startLineNum])){
+    //     blockToExecute.forEach((n) -> executeLine(n)); 
+    // }
 }
 
 public static boolean whileLoopCondition(String line){
     boolean result, resultAndOr, evalResult = true;
     String condition, conditionAndOr;
-    line = line.replaceAll("[()]","");
+    
 
     if (line.contains(" and ")){
+        line = line.replaceAll("[()]","");
         condition = line.split("and")[0];
         condition = condition.split("while")[1];
         conditionAndOr = line.split("and")[1];
@@ -116,6 +138,7 @@ public static boolean whileLoopCondition(String line){
         }
     }
     else if (line.contains(" or ")){
+        line = line.replaceAll("[()]","");
         condition = line.split("or")[0];
         condition = condition.split("while")[1];
         conditionAndOr = line.split("or")[1];
@@ -132,10 +155,12 @@ public static boolean whileLoopCondition(String line){
     else{
         if (line.contains("while(") || line.contains("while (")){
             condition = line.split("[\\(\\)]")[1];
-
+            
         }
-        else
+        else{
+            line = line.replaceAll("[()]","");
             condition = line.substring(6, line.length()-1);
+        }
             result = evaluateTrueFalse(condition);
             if(!result){
                 evalResult = false;
@@ -187,6 +212,7 @@ public static boolean assignmentOperator(String line){
 
     }
     else{
+        variableValue = variableValue.replaceAll("\\s","");
         if (!Character.isDigit(variableValue.charAt(0)) && variableValue.charAt(0) != '-'){
             variableValue = (variables.get(variableValue));
         }
@@ -280,7 +306,7 @@ public static void ifelse(String line){
         condition = line.split("and")[0];
         condition = condition.split("if")[1];
         conditionAndOr = line.split("and")[1];
-        conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
+        conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-2);
         result = evaluateTrueFalse(condition);
         resultAndOr = evaluateTrueFalse(conditionAndOr);
 
@@ -297,7 +323,7 @@ public static void ifelse(String line){
             condition = line.split("or")[0];
             condition = condition.split("if")[1];
             conditionAndOr = line.split("or")[1];
-            conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
+            conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-2);
             result = evaluateTrueFalse(condition);
             resultAndOr = evaluateTrueFalse(conditionAndOr);
             if(result == false && resultAndOr == false){
@@ -313,11 +339,15 @@ public static void ifelse(String line){
             }
             else{
                 line = line.replaceAll("[()]","");
-                
                 condition = line.replaceAll("\\s", "");
-                
-                condition = condition.substring(2, condition.length()-1);
+                if(line.contains(("elif"))){
+                    condition = condition.substring(4, condition.length()-1);
+                }
+                else{
+                    condition = condition.substring(2, condition.length()-1);
+                }
             }
+            System.out.println(condition);
                 result = evaluateTrueFalse(condition);
                 if(!result){
                     evalResult = false;
@@ -329,8 +359,11 @@ public static void ifelse(String line){
         while(line.charAt(ifSpacing) == ' '){
             ifSpacing++;
         }
+        System.out.println("SPACEs" + ifSpacing);
     i++;
     line = linesFromFile[i];
+    System.out.println(line);
+    System.out.println(evalResult);
     if(evalResult){
         while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             executeLine(line);
@@ -371,6 +404,7 @@ public static void ifelse(String line){
             if(line.contains("else:")){
                 i++;
                 line = linesFromFile[i];
+                System.out.println(line);
                 j = 0;
                 while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
                     i++;
@@ -389,7 +423,11 @@ public static void ifelse(String line){
         }
     }
     else{
-        
+        ifSpacing = 0;
+        while(line.charAt(ifSpacing) == ' '){
+            ifSpacing++;
+        }
+        System.out.println("SPACEs" + ifSpacing);
         j = 0;
         while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             i++;

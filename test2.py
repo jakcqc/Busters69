@@ -59,12 +59,12 @@ end = 25
 prime_counter = 0
 
 # Some simple equations
-eq1 = 2 * -5 + 20
-print("EQ1: "+str(eq1))
-if(eq1 != 0):
-    print("eq1 output not equal to 0")
-eq2 = -2 * 3 / 12
-print("EQ2: "+str(eq2))
+# eq1 = 2 * -5 + 20
+# print("EQ1: "+str(eq1))
+# if(eq1 != 0):
+#     print("eq1 output not equal to 0")
+# eq2 = -2 * 3 / 12
+# print("EQ2: "+str(eq2))
 
 # Uncomment this code block below for BONUS (Syntax error)
 # This is just a simple example...
