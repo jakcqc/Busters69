@@ -42,6 +42,9 @@ class Main {
 
 public static void executeLine(String line){
     boolean lineDone = false;
+    // if (line.contains(" int(")){
+    //     toInt(line);
+    // }
     if (line.contains("while")){
         whileLoop(line);
         i--;
@@ -465,6 +468,42 @@ public static void ifelse(String line){
         }
     }
 }
+
+// public static void toInt(String line){
+//     line = line.replaceAll("//s", "");
+//     String expression = line.split("[\\(\\)]")[1];
+//     String first = "";
+//     String second = "";
+//     if(expression.contains("-")){
+//         first = expression.split("-")[0];
+//         second = expression.split("-")[1];
+//     }
+//     if(expression.contains("*")){
+//         first = expression.split("*")[0];
+//         second = expression.split("*")[1];
+//     }
+//     if(expression.contains("/")){
+//         first = expression.split("/")[0];
+//         second = expression.split("/")[1];
+//     }
+//     if(expression.contains("^")){
+//         first = expression.split("^")[0];
+//         second = expression.split("^")[1];
+//     }
+//     if(expression.contains("%")){
+//         first = expression.split("%")[0];
+//         second = expression.split("%")[1];
+//     }
+//     if (!Character.isDigit(first.charAt(0)) && first.charAt(0) != '-'){
+//         first = (variables.get(first));
+//     }
+//     else{
+//         if(!Character.isDigit(second.charAt(0)) && second.charAt(0) != '-'){
+//             second = (variables.get(second));
+//         }
+//     }
+
+// }
 
 public static void printOut(String line){
     
