@@ -80,19 +80,27 @@ public static void whileLoop(String line){
     line = line.replaceAll("[()]",""); 
     int startLineNum = i;
     i++;
-    
     line = linesFromFile[i];
-    ArrayList<String> blockToExecute = new ArrayList<String>();
     while(line.charAt(0) == ' ' || line.charAt(0) == '\t'){
-        blockToExecute.add(line);
-        i++;
+        System.out.println(line);
         j++;
+        i++;
         line = linesFromFile[i];
+        //System.out.println(line);
+    }
+    while(whileLoopCondition(linesFromFile[startLineNum])){
+        i = startLineNum + 1;
+        line = linesFromFile[i];
+        while((line.charAt(0) == ' ' || line.charAt(0) == '\t')){
+            //System.out.println(line);
+            executeLine(line);
+            i++;
+            line = linesFromFile[i];
+        }
     }
 
-    while(whileLoopCondition(linesFromFile[startLineNum])){
-        blockToExecute.forEach((n) -> executeLine(n)); 
-    }
+    i = startLineNum + j + 1;
+    line = linesFromFile[i];
 }
 
 public static boolean whileLoopCondition(String line){
@@ -313,11 +321,15 @@ public static void ifelse(String line){
             }
             else{
                 line = line.replaceAll("[()]","");
-                
                 condition = line.replaceAll("\\s", "");
-                
-                condition = condition.substring(2, condition.length()-1);
+                if(line.contains(("elif"))){
+                    condition = condition.substring(4, condition.length()-1);
+                }
+                else{
+                    condition = condition.substring(2, condition.length()-1);
+                }
             }
+            System.out.println(condition);
                 result = evaluateTrueFalse(condition);
                 if(!result){
                     evalResult = false;
@@ -329,6 +341,7 @@ public static void ifelse(String line){
         while(line.charAt(ifSpacing) == ' '){
             ifSpacing++;
         }
+        System.out.println("SPACEs" + ifSpacing);
     i++;
     line = linesFromFile[i];
     if(evalResult){
@@ -389,7 +402,11 @@ public static void ifelse(String line){
         }
     }
     else{
-        
+        ifSpacing = 0;
+        while(line.charAt(ifSpacing) == ' '){
+            ifSpacing++;
+        }
+        System.out.println("SPACEs" + ifSpacing);
         j = 0;
         while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             i++;

@@ -11,32 +11,21 @@ charmender_attack = 40
 squirtle_attack = 35
 bulbasaur_attack = 25
 
-turn = 0
+turn = 1
 
 # Turn-based attack loop, default starts with charmender (turn = 1)
 # To change default to Squirtle change set 'turn' to 0
-x = 6
-while (charmender_HP > 105):
-    print(x)
-    print("Hello")
-    charmender_HP -= 1
-print("hello")
-
-while (charmender_HP > 0):
-    print("HelloXYZ")
+while charmender_HP > 0 and squirtle_HP > 0:
     if turn == 1:
         squirtle_HP -= charmender_attack
-        print("Charmender did "+charmender_attack+" damage")
-        print("Squirtle got hurt :'( HP is: "+squirtle_HP)
-        print(squirtle_HP)
+        print("Charmender did "+str(charmender_attack)+" damage")
+        print("Squirtle got hurt :'( HP is: "+str(squirtle_HP))
         turn = 0
     else:
         charmender_HP -= squirtle_attack
-        print("Squirtle faught back and did "+squirtle_attack+" damage")
-        print("Charmender got bitten! HP is: "+squirtle_HP)
+        print("Squirtle faught back and did "+str(squirtle_attack)+" damage")
+        print("Charmender got bitten! HP is: "+str(squirtle_HP))
         turn = 1
-print("Hello")
-
 # Print winner pokemon
 if charmender_HP >= 1:
     print(name+"'s Charmender won!")
@@ -45,14 +34,6 @@ elif squirtle_HP >=1:
 else:
     print("Something went wrong!!!")
 
-if charmender_HP >= 800 and charmender_attack >= 1:
-    print(name+"'s Charmender won!BOIIIIII")
-elif squirtle_HP >=1000 or squirtle_attack >= 100:
-    print(name+"'s Squirtle won!")
-else:
-    print("Something went wrong!!!")
-
-print("hi")
 #Find primes in a given interval
 begin = 5
 end = 25
