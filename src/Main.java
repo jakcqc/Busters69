@@ -26,9 +26,7 @@ class Main {
 
         linesFromFile = in.split("\n");
         numberOfLines = linesFromFile.length;
-        //i = 0;
 
-        System.out.println("FLAG: " + linesFromFile[12]);
         for(i = 0; i<linesFromFile.length; i++){
             if(!(linesFromFile[i].isEmpty())){
                 if ((linesFromFile[i].charAt(0) != '#')){
@@ -45,7 +43,12 @@ class Main {
 public static void executeLine(String line){
     boolean lineDone = false;
     if (line.contains("while")){
+<<<<<<< HEAD
         EvaluateWhile(line);
+=======
+        whileLoop(line);
+        i--;
+>>>>>>> f4d539c8bf041ac912ef8fc43fc48c76e7bd0b40
         lineDone = true;
     } 
     if (line.contains("for")){
@@ -53,8 +56,8 @@ public static void executeLine(String line){
         lineDone = true;
     }
     if (line.contains("if")){
-        
         ifelse(line);
+        i--;
         lineDone = true;
     }
     if (line.contains("print")){
@@ -63,7 +66,7 @@ public static void executeLine(String line){
     }
 
     if ((lineDone == false) && (line.contains("-=") || line.contains("*=") || line.contains("/=") || line.contains("^=") || line.contains("%=") || line.contains("=") || line.contains("+="))){
-        System.out.println(assignmentOperator(line));
+        assignmentOperator(line);
         lineDone = true;
     }
 
@@ -76,21 +79,85 @@ public static void executeLine(String line){
     //makeNewVariable(line);
 }
 
-public static void makeNewVariable(String line){
-    line = line.replaceAll("\\s","");
+public static void whileLoop(String line){
+    int j = 0;
+    line = line.replaceAll("[()]",""); 
+    int startLineNum = i;
+    i++;
+    
+    line = linesFromFile[i];
+    ArrayList<String> blockToExecute = new ArrayList<String>();
+    while(line.charAt(0) == ' ' || line.charAt(0) == '\t'){
+        blockToExecute.add(line);
+        i++;
+        j++;
+        line = linesFromFile[i];
+    }
+
+    while(whileLoopCondition(linesFromFile[startLineNum])){
+        blockToExecute.forEach((n) -> executeLine(n)); 
+    }
+}
+
+public static boolean whileLoopCondition(String line){
+    boolean result, resultAndOr, evalResult = true;
+    String condition, conditionAndOr;
     line = line.replaceAll("[()]","");
 
-    String variableName = line.split("=")[0];
-    String variableValue = line.split("=")[1];
+    if (line.contains(" and ")){
+        condition = line.split("and")[0];
+        condition = condition.split("while")[1];
+        conditionAndOr = line.split("and")[1];
+        conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
+        result = evaluateTrueFalse(condition);
+        resultAndOr = evaluateTrueFalse(conditionAndOr);
+
+        if(result == false || resultAndOr == false){
+            evalResult = false;
+        }
+        else{
+            evalResult = true;
+        }
+    }
+    else if (line.contains(" or ")){
+        condition = line.split("or")[0];
+        condition = condition.split("while")[1];
+        conditionAndOr = line.split("or")[1];
+        conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
+        result = evaluateTrueFalse(condition);
+        resultAndOr = evaluateTrueFalse(conditionAndOr);
+        if(result == false && resultAndOr == false){
+            evalResult = false;
+        }
+        else{
+            evalResult = true;
+        }
+    }
+    else{
+        if (line.contains("while(") || line.contains("while (")){
+            condition = line.split("[\\(\\)]")[1];
+
+        }
+        else
+            condition = line.substring(6, line.length()-1);
+            result = evaluateTrueFalse(condition);
+            if(!result){
+                evalResult = false;
+        }
+    }
+    return evalResult;
+}
+
+public static void makeNewVariable(String variableName, String variableValue){
     variables.put(variableName, variableValue);
 }
 
-public static void updateVariable(String line){
+public static void updateVariable(String line, String variableName, String variableValue){
     if ((line.contains("-") || line.contains("*") || line.contains("/") || line.contains("^") || line.contains("%") || line.contains("+"))){
         evaluateArithmatic(line);
     } 
     else {
-        makeNewVariable(line);
+        makeNewVariable(variableName, variableValue);
     }
     
 }
@@ -100,10 +167,13 @@ public static boolean checkIfExists(String variableName){
 }
 
 public static boolean assignmentOperator(String line){
-    line = line.replaceAll("\\s","");
     line = line.replaceAll("[()]","");    
     String variableName = line.split("=")[0];
+    variableName = variableName.replaceAll("\\s","");
     String variableValue = line.split("=")[1];
+    if(variableValue.charAt(0) == ' '){ // Gets rid of space if present between = and new value
+        variableValue = variableValue.substring(1, variableValue.length());
+    }
     boolean toggle = false;
     
     if(variableValue.charAt(0)== '"'){ // If string section
@@ -116,12 +186,12 @@ public static boolean assignmentOperator(String line){
             System.out.println("Error at line "+i);
         }
         if (toggle == false){
-            updateVariable(line);
+            updateVariable(line, variableName, variableValue);
         }
 
     }
     else{
-        if (!(Character.isDigit(variableValue.charAt(0)))){
+        if (!Character.isDigit(variableValue.charAt(0)) && variableValue.charAt(0) != '-'){
             variableValue = (variables.get(variableValue));
         }
         if (line.contains("+=")){
@@ -149,7 +219,7 @@ public static boolean assignmentOperator(String line){
             return true;
         }
         if (line.contains("=")){
-            updateVariable(line);
+            updateVariable(line, variableName, variableValue);
             return true;
         }
     }
@@ -168,38 +238,32 @@ public static void stringAppend(String variable, String stringToAppend){
 
 public static void intPlusEquals(String variable, String value){
     Double oldVariableValue = Double.parseDouble(variables.get(variable));
-    System.out.println(oldVariableValue);
     variables.put(variable, String.valueOf(oldVariableValue + Double.parseDouble(value)));
 }
 
 public static void intMinusEquals(String variable, String value){
     Double oldVariableValue = Double.parseDouble(variables.get(variable));
-    System.out.println(oldVariableValue);
     variables.put(variable, String.valueOf(oldVariableValue - Double.parseDouble(value)));
 }
 
 public static void intMultEquals(String variable, String value){
     Double oldVariableValue = Double.parseDouble(variables.get(variable));
-    System.out.println(oldVariableValue);
     variables.put(variable, String.valueOf(oldVariableValue * Double.parseDouble(value)));
 }
 
 public static void intDivEquals(String variable, String value){
     Double oldVariableValue = Double.parseDouble(variables.get(variable));
-    System.out.println(oldVariableValue);
     variables.put(variable, String.valueOf(oldVariableValue / Double.parseDouble(value)));
 }
 
 public static void intExpEquals(String variable, String value){
     Double oldVariableValue = Double.parseDouble(variables.get(variable));
-    System.out.println(oldVariableValue);
     Double newValue = Math.pow(oldVariableValue, Double.parseDouble(value));
     variables.put(variable, String.valueOf(newValue));
 }
 
 public static void intModEquals(String variable, String value){
     Double oldVariableValue = Double.parseDouble(variables.get(variable));
-    System.out.println(oldVariableValue);
     variables.put(variable, String.valueOf(oldVariableValue % Double.parseDouble(value)));
 }
 
@@ -209,50 +273,70 @@ public static void ifelse(String line){
     int j = 0;
     boolean result, resultAndOr, evalResult = true;
     String condition, conditionAndOr;
+    // line = line.replaceAll("[()]","");  
     // if (line.charAt(line.length()-1) != ':'){
     //     // Syntax Error
     //     System.out.println("Syntax Error 194");
     //     System.exit(0);
     // }
     if (line.contains(" and ")){
-        condition = line.split("[\\(\\)(\\)")[1];
-        conditionAndOr = line.split("[\\(\\)(\\)")[2];
+        line = line.replaceAll("[()]","");
+        condition = line.split("and")[0];
+        condition = condition.split("if")[1];
+        conditionAndOr = line.split("and")[1];
+        conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
         result = evaluateTrueFalse(condition);
         resultAndOr = evaluateTrueFalse(conditionAndOr);
 
-        if(!result && resultAndOr){
+        if(result == false || resultAndOr == false){
             evalResult = false;
         }
-    }
-    else if (line.contains(" or ")){
-        condition = line.split("[\\(\\)(\\)")[1];
-        conditionAndOr = line.split("[\\(\\)(\\)")[2];
-        result = evaluateTrueFalse(condition);
-        resultAndOr = evaluateTrueFalse(conditionAndOr);
-
-        if(result && resultAndOr){
-            evalResult = false;
+        else{
+            evalResult = true;
         }
     }
-    else{
-        if (line.contains("if(") || line.contains("if (")){
-            condition = line.split("[\\(\\)]")[1];
-
+    else{ 
+        if (line.contains(" or ")){
+            line = line.replaceAll("[()]","");
+            condition = line.split("or")[0];
+            condition = condition.split("if")[1];
+            conditionAndOr = line.split("or")[1];
+            conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
+            result = evaluateTrueFalse(condition);
+            resultAndOr = evaluateTrueFalse(conditionAndOr);
+            if(result == false && resultAndOr == false){
+                evalResult = false;
+            }
+            else{
+                evalResult = true;
+            }
         }
-        else
-            condition = line.substring(3, line.length()-1);
-        System.out.println("HERE: "+condition);
-        //condition = line.split("[\\ \\]")[1];
-        result = evaluateTrueFalse(condition);
-        if(!result){
-            evalResult = false;
+        else{
+            if (line.contains("if(") || line.contains("if (")){
+                condition = line.split("[\\(\\)]")[1];
+            }
+            else{
+                line = line.replaceAll("[()]","");
+                
+                condition = line.replaceAll("\\s", "");
+                
+                condition = condition.substring(2, condition.length()-1);
+            }
+                result = evaluateTrueFalse(condition);
+                if(!result){
+                    evalResult = false;
+            }
         }
     }
-    System.out.println("HERE : "+condition);
+    
+    int ifSpacing = 0;
+        while(line.charAt(ifSpacing) == ' '){
+            ifSpacing++;
+        }
     i++;
+    line = linesFromFile[i];
     if(evalResult){
-        line = linesFromFile[i];
-        while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+        while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             executeLine(line);
             i++;
             j++;
@@ -260,10 +344,13 @@ public static void ifelse(String line){
                 line = linesFromFile[i];
             else
                 break;
+            if(linesFromFile[i].isEmpty()){
+                break;
+            }
         }
         if(j == 0){
             // Syntax Error
-            System.out.println("Syntax Error236");
+            System.out.println("Syntax Error332");
             System.exit(0);
         }
         if(j > 0){
@@ -271,14 +358,17 @@ public static void ifelse(String line){
                 i++;
                 line = linesFromFile[i];
                 j = 0;
-                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
                     i++;
                     j++;
                     line = linesFromFile[i];
+                    if(linesFromFile[i].isEmpty()){
+                        break;
+                    }
                 }
                 if(j == 0){
                     // Syntax Error
-                    System.out.println("Syntax Error 277");
+                    System.out.println("Syntax Error 247");
                     
                 }
             }
@@ -286,124 +376,85 @@ public static void ifelse(String line){
                 i++;
                 line = linesFromFile[i];
                 j = 0;
-                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
                     i++;
                     j++;
                     line = linesFromFile[i];
+                    if(linesFromFile[i].isEmpty()){
+                        break;
+                    }
                 }
                 if(j == 0){
                     // Syntax Error
-                    System.out.println("Syntax Error 251");
+                    System.out.println("Syntax Error 362");
                     
                 }
             }
         }
     }
     else{
-        line = linesFromFile[i];
+        
         j = 0;
-        while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+        while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             i++;
             j++;
             line = linesFromFile[i];
+            if(linesFromFile[i].isEmpty()){
+                break;
+            }
         }
         if(j == 0){
             // Syntax Error
-            System.out.println("Syntax Error 264");
+            System.out.println("Syntax Error 378");
         }
         if(line.contains("elif")){
-            if (line.contains("elif(") || line.contains("elif (")){
-                condition = line.split("[\\(\\)]")[1];
-            }
-            condition = line.substring(5, line.length()-1);
-            result = evaluateTrueFalse(condition);
-            i++;
-            if(result){
-                line = linesFromFile[i];
-                j = 0;
-                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
-                    executeLine(line);
-                    i++;
-                    j++;
-                    line = linesFromFile[i];
-                }
-                if(j == 0){
-                    // Syntax Error
-                    System.out.println("Syntax Error 313");
-                    System.exit(0);
-                }
-                if(j > 0){
-                    //i++;
-                    //line = linesFromFile[i];
-                    if(line.contains("else:")){
-                        i++;
-                        line = linesFromFile[i];
-                        j = 0;
-                        while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
-                            i++;
-                            j++;
-                            line = linesFromFile[i];
-                        }
-                        if(j == 0){
-                            // Syntax Error
-                            System.out.println("Syntax Error 330");
-                            
-                        }
-                    }
-                }
-            }
-            else{
-                line = linesFromFile[i];
-                j = 0;
-                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
-                    i++;
-                    j++;
-                    line = linesFromFile[i];
-                }
-                if(j == 0){
-                    // Syntax Error
-                    System.out.println("Syntax Error 347");
-                    
-                }
-                if(line.contains("else:")){
-                    i++;
-                    line = linesFromFile[i];
-                    j = 0;
-                    while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
-                        executeLine(line);
-                        i++;
-                        j++;
-                        line = linesFromFile[i];
-                    }
-                    if(j == 0){
-                        // Syntax Error
-                        System.out.println("Syntax Error 361");
-                        System.exit(0);
-                    }
-                }
-            }
-        }
+            ifelse(line);
+         }
         if(line.contains("else:")){
             i++;
             line = linesFromFile[i];
             j = 0;
-            while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+            while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
                 executeLine(line);
                 i++;
                 j++;
                 line = linesFromFile[i];
+                if(linesFromFile[i].isEmpty()){
+                    break;
+                }
             }
             if(j == 0){
                 // Syntax Error
-                System.out.println("Syntax Error 275");
+                System.out.println("Syntax Error 395");
                 System.exit(0);
             }
         }
     }
-    i--;
 }
 
 public static void printOut(String line){
+    
+    
+    String temp1;
+    String temp2;
+    String result = "";
+    int index;
+    if(line.contains("str")){
+        temp1 = line.split("str\\(")[0];
+        temp2 = line.split("str\\(")[1];
+        index = temp2.indexOf(")");
+        if (index == -1)
+        {
+            
+        }
+        else
+        {
+            result = temp2.substring(0, index) + temp2.substring(index);
+        }
+        line = temp1 + result;
+        
+    } 
+    
     String statement = line.split("[\\(\\)]")[1];
     String statements[] = statement.split("\\+");
     for(int x = 0; x < statements.length; x++){
@@ -581,13 +632,14 @@ public static void evaluateArithmatic(String line){
     String variable = line.split("=")[0];
     String expression = line.split("=")[1];
     Object result = 0;
+    ScriptException error;
 
     ScriptEngineManager manager = new ScriptEngineManager();
     ScriptEngine engine = manager.getEngineByName("js");        
     try {
         result = engine.eval(expression);
     } catch (ScriptException e) {
-        System.out.println(e);
+        error = e;
     }
     variables.put(variable, result.toString());
 }
