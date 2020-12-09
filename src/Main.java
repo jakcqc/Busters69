@@ -310,11 +310,13 @@ public static void ifelse(String line){
         else{
             if (line.contains("if(") || line.contains("if (")){
                 condition = line.split("[\\(\\)]")[1];
-
             }
             else{
                 line = line.replaceAll("[()]","");
-                condition = line.substring(3, line.length()-1);
+                
+                condition = line.replaceAll("\\s", "");
+                
+                condition = condition.substring(2, condition.length()-1);
             }
                 result = evaluateTrueFalse(condition);
                 if(!result){
@@ -322,10 +324,15 @@ public static void ifelse(String line){
             }
         }
     }
+    
+    int ifSpacing = 0;
+        while(line.charAt(ifSpacing) == ' '){
+            ifSpacing++;
+        }
     i++;
+    line = linesFromFile[i];
     if(evalResult){
-        line = linesFromFile[i];
-        while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+        while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             executeLine(line);
             i++;
             j++;
@@ -347,7 +354,7 @@ public static void ifelse(String line){
                 i++;
                 line = linesFromFile[i];
                 j = 0;
-                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
                     i++;
                     j++;
                     line = linesFromFile[i];
@@ -365,7 +372,7 @@ public static void ifelse(String line){
                 i++;
                 line = linesFromFile[i];
                 j = 0;
-                while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+                while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
                     i++;
                     j++;
                     line = linesFromFile[i];
@@ -382,9 +389,9 @@ public static void ifelse(String line){
         }
     }
     else{
-        line = linesFromFile[i];
+        
         j = 0;
-        while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+        while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             i++;
             j++;
             line = linesFromFile[i];
@@ -403,7 +410,7 @@ public static void ifelse(String line){
             i++;
             line = linesFromFile[i];
             j = 0;
-            while(line.charAt(0) == ' ' || line.charAt(0) == ('\t')){
+            while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
                 executeLine(line);
                 i++;
                 j++;

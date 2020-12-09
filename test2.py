@@ -11,21 +11,31 @@ charmender_attack = 40
 squirtle_attack = 35
 bulbasaur_attack = 25
 
-turn = 1
+turn = 0
 
 # Turn-based attack loop, default starts with charmender (turn = 1)
 # To change default to Squirtle change set 'turn' to 0
-# while charmender_HP > 0 and squirtle_HP > 0:
-#     if turn == 1:
-#         squirtle_HP -= charmender_attack
-#         print("Charmender did "+charmender_attack+" damage")
-#         print("Squirtle got hurt :'( HP is: "+squirtle_HP)
-#         turn = 0
-#     else:
-#         charmender_HP -= squirtle_attack
-#         print("Squirtle faught back and did "+squirtle_attack+" damage")
-#         print("Charmender got bitten! HP is: "+squirtle_HP)
-#         turn = 1
+x = 6
+while (charmender_HP > 105):
+    print(x)
+    print("Hello")
+    charmender_HP -= 1
+print("hello")
+
+while (charmender_HP > 0):
+    print("HelloXYZ")
+    if turn == 1:
+        squirtle_HP -= charmender_attack
+        print("Charmender did "+charmender_attack+" damage")
+        print("Squirtle got hurt :'( HP is: "+squirtle_HP)
+        print(squirtle_HP)
+        turn = 0
+    else:
+        charmender_HP -= squirtle_attack
+        print("Squirtle faught back and did "+squirtle_attack+" damage")
+        print("Charmender got bitten! HP is: "+squirtle_HP)
+        turn = 1
+print("Hello")
 
 # Print winner pokemon
 if charmender_HP >= 1:
