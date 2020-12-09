@@ -6,7 +6,7 @@ import java.util.HashMap;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
-
+import java.util.Arrays;
 
 class Main {
     public static ArrayList<String> pythonKeywords = new ArrayList();
@@ -26,13 +26,12 @@ class Main {
 
         linesFromFile = in.split("\n");
         numberOfLines = linesFromFile.length;
+        linesFromFile = removeEmptyLines(linesFromFile);
 
         for(i = 0; i<linesFromFile.length; i++){
             if(!(linesFromFile[i].isEmpty())){
                 if ((linesFromFile[i].charAt(0) != '#')){
-                    // System.out.println("Running line: "+(i+1));
                     executeLine(linesFromFile[i]);
-                    // System.out.println("\n");
                 }
             }
         }
@@ -40,7 +39,17 @@ class Main {
 
     }
 
+    public static String[] removeEmptyLines(String [] lines){
+        String[] removedNull = Arrays.stream(lines)
+                .filter(value ->
+                        value != null && value.length() > 0
+                )
+                .toArray(size -> new String[size]);
+        return removedNull;
+    }
+
 public static void executeLine(String line){
+    
     boolean lineDone = false;
     if (line.contains("while")){
         whileLoop(line);
@@ -70,7 +79,8 @@ public static void executeLine(String line){
         evaluateArithmatic(line);
         lineDone = true;
     } 
-
+    
+    
     
     //makeNewVariable(line);
 }
