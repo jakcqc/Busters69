@@ -291,36 +291,35 @@ public static void ifelse(String line){
             evalResult = true;
         }
     }
-    else if (line.contains(" or ")){
-        line = line.replaceAll("[()]","");
-        condition = line.split("or")[0];
-        condition = condition.split("if")[1];
-        conditionAndOr = line.split("or")[1];
-        conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
-        result = evaluateTrueFalse(condition);
-        resultAndOr = evaluateTrueFalse(conditionAndOr);
-        if(result == false && resultAndOr == false){
-            evalResult = false;
-        }
-        else{
-            evalResult = true;
-        }
-    }
-    else{
-        System.out.println("First: "+line);
-        if (line.contains("if(") || line.contains("if (")){
-            System.out.println("FLAGHERE: ");
-            condition = line.split("[\\(\\)]")[1];
-
-        }
-        else{
+    else{ 
+        if (line.contains(" or ")){
             line = line.replaceAll("[()]","");
-            condition = line.substring(3, line.length()-1);
-        }
-        System.out.println("Second: "+condition);
+            condition = line.split("or")[0];
+            condition = condition.split("if")[1];
+            conditionAndOr = line.split("or")[1];
+            conditionAndOr = conditionAndOr.substring(1, conditionAndOr.length()-1);
             result = evaluateTrueFalse(condition);
-            if(!result){
+            resultAndOr = evaluateTrueFalse(conditionAndOr);
+            if(result == false && resultAndOr == false){
                 evalResult = false;
+            }
+            else{
+                evalResult = true;
+            }
+        }
+        else{
+            if (line.contains("if(") || line.contains("if (")){
+                condition = line.split("[\\(\\)]")[1];
+
+            }
+            else{
+                line = line.replaceAll("[()]","");
+                condition = line.substring(3, line.length()-1);
+            }
+                result = evaluateTrueFalse(condition);
+                if(!result){
+                    evalResult = false;
+            }
         }
     }
     i++;
@@ -334,6 +333,9 @@ public static void ifelse(String line){
                 line = linesFromFile[i];
             else
                 break;
+            if(linesFromFile[i].isEmpty()){
+                break;
+            }
         }
         if(j == 0){
             // Syntax Error
@@ -349,6 +351,9 @@ public static void ifelse(String line){
                     i++;
                     j++;
                     line = linesFromFile[i];
+                    if(linesFromFile[i].isEmpty()){
+                        break;
+                    }
                 }
                 if(j == 0){
                     // Syntax Error
@@ -364,6 +369,9 @@ public static void ifelse(String line){
                     i++;
                     j++;
                     line = linesFromFile[i];
+                    if(linesFromFile[i].isEmpty()){
+                        break;
+                    }
                 }
                 if(j == 0){
                     // Syntax Error
@@ -380,6 +388,9 @@ public static void ifelse(String line){
             i++;
             j++;
             line = linesFromFile[i];
+            if(linesFromFile[i].isEmpty()){
+                break;
+            }
         }
         if(j == 0){
             // Syntax Error
@@ -397,6 +408,9 @@ public static void ifelse(String line){
                 i++;
                 j++;
                 line = linesFromFile[i];
+                if(linesFromFile[i].isEmpty()){
+                    break;
+                }
             }
             if(j == 0){
                 // Syntax Error
@@ -414,24 +428,24 @@ public static void printOut(String line){
     String temp2;
     String result = "";
     int index;
-    if(line.contains("str(")){
+    if(line.contains("str")){
         temp1 = line.split("str\\(")[0];
         temp2 = line.split("str\\(")[1];
-        index = temp2.indexOf("\\)");
-
+        index = temp2.indexOf(")");
         if (index == -1)
         {
             
         }
         else
         {
-            result = temp1.substring(0, index) + temp1.substring(index + temp1.length());
+            result = temp2.substring(0, index) + temp2.substring(index);
         }
         line = temp1 + result;
-    }
+        
+    } 
+    
     String statement = line.split("[\\(\\)]")[1];
     String statements[] = statement.split("\\+");
-
     for(int x = 0; x < statements.length; x++){
         if (statements[x].charAt(0) == '"'){
             statements[x] = statements[x].substring(1, statements[x].length()-1);
@@ -582,9 +596,6 @@ public static boolean evaluateTrueFalse(String line){
             first = Double.parseDouble(variablesInput[0]);
         }
         else{
-            System.out.println("FLAG");
-            
-            System.out.println(variablesInput[0]);
             first = Double.parseDouble(variables.get(variablesInput[0]));
         }
         if (Character.isDigit(variablesInput[1].charAt(0))){

@@ -34,6 +34,14 @@ elif squirtle_HP >=1:
     print(name+"'s Squirtle won!")
 else:
     print("Something went wrong!!!")
+
+if charmender_HP >= 800 and charmender_attack >= 1:
+    print(name+"'s Charmender won!BOIIIIII")
+elif squirtle_HP >=1000 or squirtle_attack >= 100:
+    print(name+"'s Squirtle won!")
+else:
+    print("Something went wrong!!!")
+
 print("hi")
 #Find primes in a given interval
 begin = 5
