@@ -43,12 +43,8 @@ class Main {
 public static void executeLine(String line){
     boolean lineDone = false;
     if (line.contains("while")){
-<<<<<<< HEAD
-        EvaluateWhile(line);
-=======
         whileLoop(line);
         i--;
->>>>>>> f4d539c8bf041ac912ef8fc43fc48c76e7bd0b40
         lineDone = true;
     } 
     if (line.contains("for")){
@@ -619,14 +615,7 @@ public static boolean evaluateTrueFalse(String line){
     }
     return false;
 }
-public static void EvaluateWhile(String line){
-    line = line.replaceAll("\\s","");
-    String condition = line.split("[\\(\\)(\\)")[1];
-    String conditionAndOr = line.split("[\\(\\)(\\)")[2];
-    boolean result = evaluateTrueFalse(condition);
-    boolean resultAndOr = evaluateTrueFalse(conditionAndOr);
-    
-}
+
 public static void evaluateArithmatic(String line){
     line = line.replaceAll("\\s","");
     String variable = line.split("=")[0];
@@ -643,5 +632,7 @@ public static void evaluateArithmatic(String line){
     }
     variables.put(variable, result.toString());
 }
+public static void forLoop(String line){
 
+}
 }
