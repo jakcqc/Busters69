@@ -723,7 +723,35 @@ public static void evaluateArithmatic(String line){
     }
     variables.put(variable, result.toString());
 }
-public static void forLoop(String line){
 
+
+public static void forLoop(String line){
+    int j = 0;
+    line = line.replaceAll("[()]",""); 
+    int startLineNum = i;
+    i++;
+    line = linesFromFile[i];
+    //check if iter on python side
+    //create iter variable
+    //create temp x iter var
+
+    ArrayList<String> blockToExecute = new ArrayList<String>();
+    while(line.charAt(0) == ' ' || line.charAt(0) == '\t'){
+        blockToExecute.add(line);
+        i++;
+        j++;
+        line = linesFromFile[i];
+    }
+    //for x in iter
+    //iter.forEach((x) -> makeNewbVariable("","") blockToExecute.forEach((n) -> executeLine(n)));
+    while(forLoopIterable(linesFromFile[startLineNum])){
+        //x = iter[i++] 
+        //update global x variable on javaside 
+        //then execute the block again
+        blockToExecute.forEach((n) -> executeLine(n)); 
+    }
+}
+public static boolean forLoopIterable(String line){
+    
 }
 }
