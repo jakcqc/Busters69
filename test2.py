@@ -65,7 +65,6 @@ prime_counter = 0
 #     print("eq1 output not equal to 0")
 # eq2 = -2 * 3 / 12
 # print("EQ2: "+str(eq2))
-
 # Uncomment this code block below for BONUS (Syntax error)
 # This is just a simple example...
 #if(eq2 == 0)
