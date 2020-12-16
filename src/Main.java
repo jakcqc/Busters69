@@ -160,11 +160,13 @@ public static boolean whileLoopCondition(String line){
             condition = line.split("[\\(\\)]")[1];
 
         }
-        else
-            condition = line.substring(6, line.length()-1);
+        else{
+            condition = line.split("while ")[1];
+            condition = condition.substring(0, condition.length()-1);
             result = evaluateTrueFalse(condition);
             if(!result){
                 evalResult = false;
+            }
         }
     }
     return evalResult;
