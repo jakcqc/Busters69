@@ -762,6 +762,7 @@ public static int rangeSpliterr(String line){
     // might be best to create a while like function
     String variable;
     variable = line.split(",")[0];
+    
 
     return variable
 } */
