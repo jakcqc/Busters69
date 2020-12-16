@@ -756,6 +756,13 @@ public static boolean forLoopIterable(String line){
         return false;
     }
     return true;
+} /*
+public static int rangeSpliterr(String line){
+    //range has two variables a low range and a high range
+    // might be best to create a while like function
+    String variable;
+    variable = line.split(",")[0];
 
-}
+    return variable
+} */
 }
