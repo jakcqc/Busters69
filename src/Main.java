@@ -51,7 +51,7 @@ public static void executeLine(String line){
         lineDone = true;
     } 
     if (line.contains("for")){
-        // Call print function
+        forLoop(line);
         lineDone = true;
     }
     if (line.contains("if")){
@@ -752,6 +752,10 @@ public static void forLoop(String line){
     }
 }
 public static boolean forLoopIterable(String line){
-    
+    if(line == "\n"){
+        return false;
+    }
+    return true;
+
 }
 }
