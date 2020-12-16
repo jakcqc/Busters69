@@ -19,7 +19,7 @@ while charmender_HP > 0 and squirtle_HP > 0:
     if turn == 1:
         squirtle_HP -= charmender_attack
         print("Charmender did "+str(charmender_attack)+" damage")
-        print("Squirtle got hurt : HP is: "+str(squirtle_HP))
+        print("Squirtle got hurt :'( HP is: "+str(squirtle_HP))
         turn = 0
     else:
         charmender_HP -= squirtle_attack
@@ -39,7 +39,16 @@ else:
 begin = 5
 end = 25
 prime_counter = 0
-
+for num in range(begin, end):
+    if(num > 0):
+        if(num == 2):
+            print("Prime: "+str(num))
+        for i in range(2, int(num/2)+2):
+            if (num%i==0):
+                break
+            else:
+                print("Prime: "+str(num))
+                break
 
 
 # Some simple equations

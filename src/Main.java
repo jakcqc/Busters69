@@ -3,6 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -56,7 +57,7 @@ public static void executeLine(String line){
         lineDone = true;
     } 
     if (line.contains("for")){
-        // Call print function
+        forLoop(line);
         lineDone = true;
     }
     if (line.contains("if")){
@@ -66,6 +67,10 @@ public static void executeLine(String line){
     }
     if (line.contains("print")){
         printOut(line);
+        lineDone = true;
+    }
+
+    if (line.contains("break")){
         lineDone = true;
     }
 
@@ -163,6 +168,117 @@ public static boolean whileLoopCondition(String line){
         }
     }
     return evalResult;
+}
+
+public static void forLoop(String line){
+    int j = 0;
+    int numSpaces = 0;
+    int begin = 0;
+    int end = 0;
+    String temp [];
+    String variableName = line.split("for ")[1];
+    variableName = variableName.split(" in")[0];
+    while (line.charAt(numSpaces) == ' '){
+        numSpaces++;
+    }
+    if (line.contains("range")){
+        temp = (range(line).split(":"));
+        begin = Integer.parseInt(temp[0]);
+        end = Integer.parseInt(temp[1]);
+    }
+    int startLineNum = i;
+    i++;
+    line = linesFromFile[i];
+    while(line.charAt(numSpaces+3) == ' ' || line.charAt(numSpaces+3) == '\t'){
+        i++;
+        j++;
+        if (i == linesFromFile.length){
+            break;
+        }
+        if(linesFromFile[i].isEmpty() || (linesFromFile[i].length() <= numSpaces+3)){
+            break;
+        }
+        
+        line = linesFromFile[i];
+    }
+    
+    while(begin != end){
+        variables.put(variableName, Integer.toString(begin));
+        i = startLineNum + 1;
+        line = linesFromFile[i];
+        
+        while((line.charAt(0) == ' ' || line.charAt(0) == '\t')){
+            executeLine(line);
+            i++;
+            if(i<linesFromFile.length)
+                line = linesFromFile[i];
+            else{
+                break;
+            }
+        }
+        if(i==linesFromFile.length)
+            break;
+        if(linesFromFile[i].isEmpty() || (line.length() <= numSpaces+3)){
+            break;
+        }
+        begin++;
+    }
+    
+
+    i = startLineNum + j ;
+    line = linesFromFile[i];
+}
+
+public static String range(String line){
+    // line = line.replaceAll("[()]",""); 
+    String parse = line.split("range\\(")[1];
+    
+    parse = parse.substring(0, parse.length()-2);
+    parse = parse.replaceAll("\\s", "");
+
+    String first = parse.split(",")[0];
+    String second = parse.split(",")[1];
+    ArrayList<String> entries = new ArrayList<String>();
+
+    variables.forEach((k, v) -> {
+        entries.add(k);
+    });
+    boolean firstFlag = false;
+    boolean secondFlag = false;
+    if (first.contains("int")){
+        first = first.replaceAll("[()]",""); 
+        first = first.replaceAll("int", "");
+        firstFlag = true;
+    }
+    if (second.contains("int")){
+        second = second.replaceAll("[()]",""); 
+        second = second.replaceAll("int", "");
+        secondFlag = true;
+    }
+
+    for (int k = 0; k < entries.size(); k++){
+        if(first.contains(entries.get(k))){
+            first = first.replaceAll(entries.get(k), variables.get(entries.get(k)));
+        }
+        if(second.contains(entries.get(k))){
+            second = second.replaceAll(entries.get(k), variables.get(entries.get(k)));
+        }
+    }
+
+
+    if (firstFlag){
+        // first = first.replaceAll("[()]",""); 
+        // first = first.replaceAll("int", "");
+        first = Integer.toString(evaluateArithmaticReturn(first));
+    }
+    
+    if (secondFlag){
+        // second = second.replaceAll("[()]",""); 
+        // second = second.replaceAll("int", "");
+        second = Integer.toString(evaluateArithmaticReturn(second));
+    }
+    String returnString = first+":"+second;
+    return returnString;
 }
 
 public static void makeNewVariable(String variableName, String variableValue){
@@ -382,7 +498,7 @@ public static void ifelse(String line){
                     i++;
                     j++;
                     line = linesFromFile[i];
-                    if(linesFromFile[i].isEmpty()){
+                    if(linesFromFile[i].isEmpty() || (line.length() <= ifSpacing+3)){
                         break;
                     }
                 }
@@ -400,7 +516,7 @@ public static void ifelse(String line){
                     i++;
                     j++;
                     line = linesFromFile[i];
-                    if(linesFromFile[i].isEmpty()){
+                    if(linesFromFile[i].isEmpty() || (line.length() <= ifSpacing+3)){
                         break;
                     }
                 }
@@ -417,10 +533,14 @@ public static void ifelse(String line){
         while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
             i++;
             j++;
-            line = linesFromFile[i];
-            if(linesFromFile[i].isEmpty()){
+            if (i+1 == linesFromFile.length){
                 break;
             }
+            if(linesFromFile[i].isEmpty() || (line.length() <= ifSpacing+3)){
+                break;
+            }
+            line = linesFromFile[i];
+            
         }
         if(j == 0){
             // Syntax Error
@@ -438,7 +558,7 @@ public static void ifelse(String line){
                 i++;
                 j++;
                 line = linesFromFile[i];
-                if(linesFromFile[i].isEmpty()){
+                if(linesFromFile[i].isEmpty() || (line.length() <= ifSpacing+3)){
                     break;
                 }
             }
@@ -612,7 +732,16 @@ public static boolean evaluateTrueFalse(String line){
             first = Double.parseDouble(variablesInput[0]);
         }
         else{
-            first = Double.parseDouble(variables.get(variablesInput[0]));
+            if (variablesInput[0].contains("%")){
+                String temp1 = variablesInput[0].split("%")[0];
+                String temp2 = variablesInput[0].split("%")[1];
+                double temp3 = Double.parseDouble(variables.get(temp1));
+                double temp4 = Double.parseDouble(variables.get(temp2));
+                first = temp3 % temp4;
+            }
+            else
+                first = Double.parseDouble(variables.get(variablesInput[0]));
+            
         }
         if (Character.isDigit(variablesInput[1].charAt(0))){
             second = Double.parseDouble(variablesInput[1]);
@@ -656,6 +785,27 @@ public static void evaluateArithmatic(String line){
         error = e;
     }
     variables.put(variable, result.toString());
+}
+
+public static int evaluateArithmaticReturn(String line){
+    line = line.replaceAll("\\s","");
+    Object result = 0;
+    ScriptException error;
+
+    ScriptEngineManager manager = new ScriptEngineManager();
+    ScriptEngine engine = manager.getEngineByName("js");        
+    try {
+        result = engine.eval(line);
+    } catch (ScriptException e) {
+        error = e;
+    }
+    String temp = result.toString();
+    int tempChar = temp.indexOf(".");
+    if(tempChar != -1){
+        temp = temp.substring(0, tempChar);
+    }
+    //variables.put(variable, result.toString());
+    return Integer.parseInt(temp);
 }
 
 }
