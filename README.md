@@ -14,9 +14,9 @@
 * Ethan Schutzenhofer
 
 ## Requirements to Run our Interpreter
-### We are using Visual Studio Code to run our Interpreter
-### You should have a Java JDK installed but if you don't we will show you how to download it
-### And Python installed but we will also show you how to install that
+###  * We are using Visual Studio Code to run our Interpreter
+###  * You should have a Java JDK installed but if you don't we will show you how to download it
+###  * And Python installed but we will also show you how to install that
 ###
 
 ## How to use our Interpreter
