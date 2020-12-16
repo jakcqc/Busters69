@@ -57,7 +57,7 @@ public static void executeLine(String line){
         lineDone = true;
     } 
     if (line.contains("for")){
-        forLoop(line);
+        forLoopNew(line);
         lineDone = true;
     }
     if (line.contains("if")){
@@ -188,6 +188,8 @@ public static void forLoop(String line){
         begin = Integer.parseInt(temp[0]);
         end = Integer.parseInt(temp[1]);
     }
+
+
     int startLineNum = i;
     i++;
     line = linesFromFile[i];
@@ -209,7 +211,7 @@ public static void forLoop(String line){
         i = startLineNum + 1;
         line = linesFromFile[i];
         
-        while((line.charAt(0) == ' ' || line.charAt(0) == '\t')){
+        while((line.charAt(numSpaces+3) == ' ' || line.charAt(numSpaces+3) == '\t')){
             executeLine(line);
             i++;
             if(i<linesFromFile.length)
@@ -227,7 +229,60 @@ public static void forLoop(String line){
     }
     
 
-    i = startLineNum + j ;
+    i = startLineNum + j +1;
+    line = linesFromFile[i];
+}
+
+public static void forLoopNew(String line){
+    int numSpaces = 0;
+    while (line.charAt(numSpaces) == ' '){
+        numSpaces++;
+    }
+    
+
+    int begin = 0;
+    int end = 0;
+    String temp [];
+    String variableName = line.split("for ")[1];
+    variableName = variableName.split(" in")[0];
+    while (line.charAt(numSpaces) == ' '){
+        numSpaces++;
+    }
+    if (line.contains("range")){
+        temp = (range(line).split(":"));
+        begin = Integer.parseInt(temp[0]);
+        end = Integer.parseInt(temp[1]);
+    }
+    // ============
+    int j = 0;
+    int startLineNum = i;
+    i++;
+    line = linesFromFile[i];
+    while(line.charAt(0) == ' ' || line.charAt(0) == '\t'){
+        j++;
+        i++;
+        line = linesFromFile[i];
+    }
+    while(begin != end ){
+        variables.put(variableName, Integer.toString(begin));
+        i = startLineNum + 1;
+        line = linesFromFile[i];
+        while((line.charAt(0) == ' ' || line.charAt(0) == '\t')){
+            executeLine(line);
+            i++;
+            line = linesFromFile[i];
+            if(linesFromFile[i].isEmpty()){
+                break;
+            }
+        }
+        if(linesFromFile[i].isEmpty()){
+            break;
+        }
+        begin++;
+    }
+    
+
+    i = startLineNum + j + 1;
     line = linesFromFile[i];
 }
 
@@ -532,7 +587,7 @@ public static void ifelse(String line){
     }
     else{
         j = 0;
-        while(line.charAt(ifSpacing+3) == ' ' || line.charAt(ifSpacing+3) == ('\t')){
+        while(line.charAt(ifSpacing+2) == ' ' || line.charAt(ifSpacing+2) == ('\t')){
             i++;
             j++;
             if (i+1 == linesFromFile.length){
