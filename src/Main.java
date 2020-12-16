@@ -57,7 +57,7 @@ public static void executeLine(String line){
         lineDone = true;
     } 
     if (line.contains("for")){
-        forLoopNew(line);
+        forLoop(line);
         lineDone = true;
     }
     if (line.contains("if")){
@@ -173,67 +173,6 @@ public static boolean whileLoopCondition(String line){
 }
 
 public static void forLoop(String line){
-    int j = 0;
-    int numSpaces = 0;
-    int begin = 0;
-    int end = 0;
-    String temp [];
-    String variableName = line.split("for ")[1];
-    variableName = variableName.split(" in")[0];
-    while (line.charAt(numSpaces) == ' '){
-        numSpaces++;
-    }
-    if (line.contains("range")){
-        temp = (range(line).split(":"));
-        begin = Integer.parseInt(temp[0]);
-        end = Integer.parseInt(temp[1]);
-    }
-
-
-    int startLineNum = i;
-    i++;
-    line = linesFromFile[i];
-    while(line.charAt(numSpaces+3) == ' ' || line.charAt(numSpaces+3) == '\t'){
-        i++;
-        j++;
-        if (i == linesFromFile.length){
-            break;
-        }
-        if(linesFromFile[i].isEmpty() || (linesFromFile[i].length() <= numSpaces+3)){
-            break;
-        }
-        
-        line = linesFromFile[i];
-    }
-    
-    while(begin != end){
-        variables.put(variableName, Integer.toString(begin));
-        i = startLineNum + 1;
-        line = linesFromFile[i];
-        
-        while((line.charAt(numSpaces+3) == ' ' || line.charAt(numSpaces+3) == '\t')){
-            executeLine(line);
-            i++;
-            if(i<linesFromFile.length)
-                line = linesFromFile[i];
-            else{
-                break;
-            }
-        }
-        if(i==linesFromFile.length)
-            break;
-        if(linesFromFile[i].isEmpty() || (line.length() <= numSpaces+3)){
-            break;
-        }
-        begin++;
-    }
-    
-
-    i = startLineNum + j +1;
-    line = linesFromFile[i];
-}
-
-public static void forLoopNew(String line){
     int numSpaces = 0;
     while (line.charAt(numSpaces) == ' '){
         numSpaces++;
