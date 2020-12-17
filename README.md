@@ -25,11 +25,11 @@ Our program initializes a file called test2.py and then loads each line of the f
 ## How to use our Interpreter
 1. First download the Coding Pack for Java for VS code [here!](https://code.visualstudio.com/docs/languages/java) Scroll down until you find the "Install the Coding Pack for Java" button and click for your respective operating system
 
-![](InstallVSCode.JPG)
+![](InstallVSCode.jpeg)
 2. Then Open Visual Studio code and then open the xX_Busters69_Xx project folder.
 3. Navigate to our src folder and open the Main.java file in the window.
-![](OpenJava.JPG)
+![](OpenJava.jpeg)
 
 4. Click F5 and Visual studio should open up a terminal and run the Program
 
-![](Running.JPG)
+![](Running.jpeg)
